@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FACAO Ingeniería &amp; Arquitectura | Diseño técnico de precisión</title>
+<meta name="description" content="Ingeniería de precisión y arquitectura de vanguardia. Modelado 3D, planos constructivos visados y consultoría técnica para proyectos residenciales y comerciales en Colombia." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300&family=Barlow:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: "#0A0A0A",
+          paper: "#ffffff",
+          surface: "#F4F4F6",
+          accent: { DEFAULT: "#DC2626", dark: "#B91C1C" },
+        },
+        fontFamily: {
+          heading: ["Barlow Condensed", "sans-serif"],
+          body: ["Barlow", "sans-serif"],
+          mono: ["JetBrains Mono", "monospace"],
+        },
+      },
+    },
+  };
+</script>
+<!-- Botón flotante de WhatsApp -->
+<a href="https://wa.me/50686431017?text=Hola%20FACAO%2C%20me%20gustar%C3%ADa%20cotizar%20un%20proyecto."
+   class="whatsapp-fab"
+   target="_blank"
+   rel="noopener noreferrer"
+   aria-label="Escríbenos por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" width="28" height="28">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+  </svg>
+</a>
+<!-- Control de zoom de página (accesibilidad) -->
+<div class="zoom-control" role="group" aria-label="Ajustar tamaño de la página">
+  <button type="button" id="zoom-out" class="zoom-btn" aria-label="Reducir tamaño de la página">A<span aria-hidden="true">−</span></button>
+  <button type="button" id="zoom-reset" class="zoom-btn zoom-btn-reset" aria-label="Restablecer tamaño de la página">A</button>
+  <button type="button" id="zoom-in" class="zoom-btn" aria-label="Aumentar tamaño de la página">A<span aria-hidden="true">+</span></button>
+</div>
+<p id="zoom-status" class="sr-only" role="status" aria-live="polite"></p>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-paper text-[#1F2937] font-body overflow-x-hidden min-h-screen">
+
+<!-- ============================================================
+     HEADER / NAVBAR
+     ============================================================ -->
+<header id="navbar" class="fixed top-0 left-0 right-0 z-50 navbar-transparent" style="height: 80px;">
+  <div class="h-full flex items-center justify-between mx-auto px-6 md:px-10" style="max-width: 1400px;">
+
+    <button data-nav-target="#hero" class="nav-trigger flex flex-col items-start group">
+      <span class="text-white leading-none tracking-[0.12em] font-heading font-black text-2xl transition-colors duration-200 group-hover:text-accent">FACAO</span>
+      <span class="text-gray-500 uppercase mt-0.5 font-mono" style="font-size: 8px; letter-spacing: 0.22em;">ingeniería &amp; arquitectura</span>
+    </button>
+
+    <nav class="hidden lg:flex items-center gap-9" aria-label="Navegación principal">
+      <button data-nav-target="#hero" class="nav-trigger nav-link relative text-gray-400 hover:text-white transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Inicio<span class="nav-link-underline"></span>
+      </button>
+      <button data-nav-target="#servicios" class="nav-trigger nav-link relative text-gray-400 hover:text-white transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Servicios<span class="nav-link-underline"></span>
+      </button>
+      <button data-nav-target="#portafolio" class="nav-trigger nav-link relative text-gray-400 hover:text-white transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Portafolio 3D<span class="nav-link-underline"></span>
+      </button>
+      <button data-nav-target="#proceso" class="nav-trigger nav-link relative text-gray-400 hover:text-white transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Planos<span class="nav-link-underline"></span>
+      </button>
+      <button data-nav-target="#nosotros" class="nav-trigger nav-link relative text-gray-400 hover:text-white transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Nosotros<span class="nav-link-underline"></span>
+      </button>
+      <button data-nav-target="#contacto" class="nav-trigger nav-link relative text-gray-400 hover:text-white transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Contacto<span class="nav-link-underline"></span>
+      </button>
+    </nav>
+
+    <div class="flex items-center gap-4">
+      <button data-nav-target="#contacto" class="nav-trigger hidden md:block text-white border border-gray-700 hover:bg-accent hover:border-accent transition-all duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em; padding: 10px 24px;">
+        Cotizar Planos
+      </button>
+      <button id="menu-toggle" class="lg:hidden text-white p-2 hover:text-accent transition-colors duration-200" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
+        <i data-lucide="menu" id="icon-menu-open" class="w-5 h-5"></i>
+        <i data-lucide="x" id="icon-menu-close" class="w-5 h-5 hidden"></i>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- Menú móvil fullscreen -->
+<nav id="mobile-menu" class="mobile-menu blueprint-grid-dark-menu" aria-label="Navegación móvil" style="background-color:#0A0A0A;">
+  <div class="relative flex flex-col items-center gap-6 px-8 w-full">
+    <button data-nav-target="#hero" class="nav-trigger mobile-menu-link text-white hover:text-accent transition-colors duration-200 tracking-[0.2em] uppercase font-heading font-bold text-clamp-mobile-nav">Inicio</button>
+    <button data-nav-target="#servicios" class="nav-trigger mobile-menu-link text-white hover:text-accent transition-colors duration-200 tracking-[0.2em] uppercase font-heading font-bold text-clamp-mobile-nav">Servicios</button>
+    <button data-nav-target="#portafolio" class="nav-trigger mobile-menu-link text-white hover:text-accent transition-colors duration-200 tracking-[0.2em] uppercase font-heading font-bold text-clamp-mobile-nav">Portafolio 3D</button>
+    <button data-nav-target="#proceso" class="nav-trigger mobile-menu-link text-white hover:text-accent transition-colors duration-200 tracking-[0.2em] uppercase font-heading font-bold text-clamp-mobile-nav">Planos</button>
+    <button data-nav-target="#nosotros" class="nav-trigger mobile-menu-link text-white hover:text-accent transition-colors duration-200 tracking-[0.2em] uppercase font-heading font-bold text-clamp-mobile-nav">Nosotros</button>
+    <button data-nav-target="#contacto" class="nav-trigger mobile-menu-link text-white hover:text-accent transition-colors duration-200 tracking-[0.2em] uppercase font-heading font-bold text-clamp-mobile-nav">Contacto</button>
+    <button data-nav-target="#contacto" class="nav-trigger mobile-menu-link mt-6 bg-accent text-white uppercase tracking-[0.2em] hover:bg-accent-dark transition-colors duration-200 font-mono" style="font-size: 11px; padding: 14px 40px;">
+      Cotizar Planos
+    </button>
+  </div>
+  <p class="absolute bottom-8 left-8 text-gray-700 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">FACAO © 2024</p>
+</nav>
+
+<main>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section id="hero" class="relative min-h-screen flex items-stretch overflow-hidden" style="background:#0A0A0A;" aria-labelledby="hero-title">
+  <div class="absolute inset-0 pointer-events-none blueprint-grid-dark" aria-hidden="true"></div>
+  <div class="absolute left-[44%] top-0 bottom-0 w-px hidden lg:block" style="background: rgba(220,38,38,0.15);" aria-hidden="true"></div>
+
+  <div class="relative w-full flex flex-col lg:flex-row mx-auto px-6 md:px-10" style="max-width: 1400px;">
+
+    <div class="flex flex-col justify-center pt-32 pb-24 lg:py-0 lg:w-[45%] lg:pr-16">
+
+      <p class="reveal-x-left flex items-center gap-3 mb-10">
+        <span class="h-px w-10 bg-accent" aria-hidden="true"></span>
+        <span class="text-accent uppercase font-mono" style="font-size: 10px; letter-spacing: 0.3em;">Estudio Técnico · Costa Rica</span>
+      </p>
+
+      <h1 id="hero-title" class="reveal text-white mb-8 font-heading font-extrabold text-clamp-h1" style="line-height: 0.93; letter-spacing: -0.01em;">
+        <span class="block">Ingeniería</span>
+        <span class="block text-gray-600 font-light">de precisión.</span>
+        <span class="block">Arquitectura</span>
+        <span class="block text-accent">de vanguardia.</span>
+      </h1>
+
+      <hr class="h-px w-full mb-8 border-0" style="background: rgba(148,163,184,0.18);" />
+
+      <p class="reveal text-gray-400 mb-10 max-w-[420px] font-body" style="font-size: 16px; line-height: 1.75;">
+        Transformamos ideas en planos constructivos perfectos y modelos 3D
+        hiperrealistas listos para edificar. Precisión técnica al servicio
+        de cada metro cuadrado.
+      </p>
+
+      <p class="reveal flex flex-wrap gap-4 mb-14">
+        <button data-nav-target="#portafolio" class="nav-trigger flex items-center gap-3 bg-accent text-white hover:bg-accent-dark transition-colors duration-200 group font-mono uppercase" style="font-size: 11px; letter-spacing: 0.18em; padding: 14px 28px;">
+          Ver Proyectos 3D
+          <i data-lucide="arrow-right" class="w-[13px] h-[13px] group-hover:translate-x-1 transition-transform duration-200"></i>
+        </button>
+        <button data-nav-target="#contacto" class="nav-trigger flex items-center gap-3 text-gray-300 border border-gray-700 hover:border-accent hover:text-accent transition-all duration-200 group font-mono uppercase" style="font-size: 11px; letter-spacing: 0.18em; padding: 14px 28px;">
+          Hablar con Ingeniero
+          <i data-lucide="arrow-right" class="w-[13px] h-[13px] group-hover:translate-x-1 transition-transform duration-200"></i>
+        </button>
+      </p>
+
+      <dl class="reveal flex gap-10 border-t pt-8 kv-list" style="border-color: rgba(148,163,184,0.14);">
+        <div>
+          <dd class="text-white leading-none mb-1 font-heading font-bold" style="font-size: 32px;">200+</dd>
+          <dt class="text-gray-600 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Proyectos</dt>
+        </div>
+        <div>
+          <dd class="text-white leading-none mb-1 font-heading font-bold" style="font-size: 32px;">15K+</dd>
+          <dt class="text-gray-600 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">M² Modelados</dt>
+        </div>
+        <div>
+          <dd class="text-white leading-none mb-1 font-heading font-bold" style="font-size: 32px;">100%</dd>
+          <dt class="text-gray-600 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Cumplimiento</dt>
+        </div>
+      </dl>
+    </div>
+
+    <figure class="hidden lg:flex lg:w-[55%] relative m-0">
+      <span class="absolute w-5 h-5 border-accent z-10 top-[80px] left-0 border-t border-l" aria-hidden="true"></span>
+      <span class="absolute w-5 h-5 border-accent z-10 top-[80px] right-0 border-t border-r" aria-hidden="true"></span>
+      <span class="absolute w-5 h-5 border-accent z-10 bottom-0 left-0 border-b border-l" aria-hidden="true"></span>
+      <span class="absolute w-5 h-5 border-accent z-10 bottom-0 right-0 border-b border-r" aria-hidden="true"></span>
+
+      <span class="flex-1 mt-20 overflow-hidden block" style="border: 1px solid rgba(148,163,184,0.18);">
+        <img src="https://images.unsplash.com/photo-1635006459494-c9b9665a666e?w=1400&h=1000&fit=crop&auto=format"
+             alt="Proyecto arquitectónico residencial moderno — FACAO Ingeniería & Arquitectura"
+             class="w-full h-full object-cover" style="filter: contrast(1.08) saturate(0.85);" loading="lazy" />
+      </span>
+
+      <figcaption class="reveal absolute bottom-16 left-8 max-w-[260px]" style="background: rgba(10,10,10,0.92); border: 1px solid rgba(148,163,184,0.2); backdrop-filter: blur(16px); padding: 20px 22px;">
+        <p class="flex items-center gap-2 mb-3">
+          <span class="w-2 h-2 rounded-full bg-accent pulse-dot" aria-hidden="true"></span>
+          <span class="text-accent uppercase font-mono" style="font-size: 9px; letter-spacing: 0.25em;">Proyecto Activo</span>
+        </p>
+        <p class="text-white mb-3 font-heading font-bold" style="font-size: 17px; line-height: 1.2;">Residencia Altos del Bosque</p>
+        <dl class="border-t pt-3 space-y-2 kv-list" style="border-color: rgba(148,163,184,0.15);">
+          <div class="kv-row">
+            <dt class="text-gray-600 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.15em;">Área Total</dt>
+            <dd class="text-gray-300 font-mono" style="font-size: 9px;">485 m²</dd>
+          </div>
+          <div class="kv-row">
+            <dt class="text-gray-600 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.15em;">Tipología</dt>
+            <dd class="text-gray-300 font-mono" style="font-size: 9px;">Residencial</dd>
+          </div>
+          <div class="kv-row">
+            <dt class="text-gray-600 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.15em;">Estructura</dt>
+            <dd class="text-gray-300 font-mono" style="font-size: 9px;">Concreto / Acero</dd>
+          </div>
+          <div class="kv-row">
+            <dt class="text-gray-600 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.15em;">Estado</dt>
+            <dd class="text-gray-300 font-mono" style="font-size: 9px;">Entregado 2024</dd>
+          </div>
+        </dl>
+      </figcaption>
+
+      <p class="absolute top-[90px] right-4 text-gray-700 vertical-text font-mono" style="font-size: 9px; letter-spacing: 0.15em;">
+        10° 19′ 30″ N y 84° 25′ 28″ O
+      </p>
+    </figure>
+
+    <figure class="lg:hidden mb-16 -mx-6 m-0">
+      <img src="https://images.unsplash.com/photo-1678388583153-f0e667c97288?w=800&h=500&fit=crop&auto=format"
+           alt="Proyecto 3D FACAO Arquitectura" class="w-full h-64 object-cover"
+           style="filter: contrast(1.05) saturate(0.8); border-top: 1px solid rgba(220,38,38,0.3);" loading="lazy" />
+    </figure>
+  </div>
+
+  <p class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+    <span class="hero-scroll-indicator flex flex-col items-center gap-2">
+      <span class="text-gray-600 uppercase font-mono" style="font-size: 8px; letter-spacing: 0.25em;">Explorar</span>
+      <i data-lucide="chevron-down" class="w-[13px] h-[13px] text-gray-600"></i>
+    </span>
+  </p>
+</section>
+
+<!-- ============================================================
+     SERVICIOS
+     ============================================================ -->
+<section id="servicios" class="blueprint-grid-light" style="background:#F4F4F6; padding: 120px 0;" aria-labelledby="servicios-title">
+  <div class="mx-auto px-6 md:px-10" style="max-width: 1400px;">
+
+    <div class="flex items-end justify-between mb-16 flex-wrap gap-8">
+      <div>
+        <p class="flex items-center gap-3 mb-4">
+          <span class="h-px w-8 bg-accent" aria-hidden="true"></span>
+          <span class="text-accent uppercase font-mono" style="font-size: 10px; letter-spacing: 0.28em;">Servicios Técnicos</span>
+        </p>
+        <h2 id="servicios-title" class="text-ink font-heading font-extrabold text-clamp-h2" style="line-height: 0.95;">
+          Ingeniería aplicada<br /><span class="font-light text-gray-500">a cada proyecto.</span>
+        </h2>
+      </div>
+      <p class="text-gray-500 max-w-xs font-body" style="font-size: 14px; line-height: 1.7;">
+        Cuatro disciplinas integradas para llevar cada proyecto desde el
+        concepto inicial hasta la obra terminada con precisión milimétrica.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px" style="border: 1px solid rgba(148,163,184,0.3);">
+
+      <article class="reveal service-card group relative bg-white" style="padding: 40px 32px; border-right: 1px solid rgba(148,163,184,0.3);">
+        <p class="text-accent leading-none mb-8 font-heading font-black" style="font-size: 52px; opacity: 0.9;" aria-hidden="true">01</p>
+        <i data-lucide="layers" class="service-icon w-[22px] h-[22px] text-gray-400 transition-colors duration-300 mb-5" style="stroke-width:1.5;"></i>
+        <h3 class="service-title text-ink mb-1 transition-colors duration-300 font-heading font-bold" style="font-size: 22px; line-height: 1.15;">Modelado 3D &amp; Renders</h3>
+        <p class="text-accent mb-5 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Visualización hiperrealista</p>
+        <hr class="border-0 h-px mb-5" style="background: rgba(148,163,184,0.25);" />
+        <p class="service-desc text-gray-500 mb-6 transition-colors duration-300 font-body" style="font-size: 14px; line-height: 1.7;">
+          Producción de modelos BIM y renders fotorrealistas que permiten visualizar el proyecto en todas sus dimensiones antes de iniciar obras. Iluminación real, materiales y entorno integrado.
+        </p>
+        <ul class="flex flex-wrap gap-2 mt-auto list-none m-0 p-0">
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">BIM · Revit</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">3ds Max · V-Ray</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Lumion · Enscape</li>
+        </ul>
+        <span class="service-corner absolute top-0 right-0 w-6 h-6 transition-opacity duration-300 border-t border-r border-accent" style="opacity:0;" aria-hidden="true"></span>
+      </article>
+
+      <article class="reveal service-card group relative bg-white" style="padding: 40px 32px; border-right: 1px solid rgba(148,163,184,0.3); transition-delay: 0.1s;">
+        <p class="text-accent leading-none mb-8 font-heading font-black" style="font-size: 52px; opacity: 0.9;" aria-hidden="true">02</p>
+        <i data-lucide="file-text" class="service-icon w-[22px] h-[22px] text-gray-400 transition-colors duration-300 mb-5" style="stroke-width:1.5;"></i>
+        <h3 class="service-title text-ink mb-1 transition-colors duration-300 font-heading font-bold" style="font-size: 22px; line-height: 1.15;">Planos Constructivos &amp; Visados</h3>
+        <p class="text-accent mb-5 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Documentación técnica completa</p>
+        <hr class="border-0 h-px mb-5" style="background: rgba(148,163,184,0.25);" />
+        <p class="service-desc text-gray-500 mb-6 transition-colors duration-300 font-body" style="font-size: 14px; line-height: 1.7;">
+          Juegos completos de planos arquitectónicos, estructurales, hidrosanitarios y eléctricos bajo normativas NSR-10, RETIE y códigos locales, listos para licenciamiento.
+        </p>
+        <ul class="flex flex-wrap gap-2 mt-auto list-none m-0 p-0">
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">NSR-10</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">RETIE</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Visados Curaduría</li>
+        </ul>
+        <span class="service-corner absolute top-0 right-0 w-6 h-6 transition-opacity duration-300 border-t border-r border-accent" style="opacity:0;" aria-hidden="true"></span>
+      </article>
+
+      <article class="reveal service-card group relative bg-white" style="padding: 40px 32px; border-right: 1px solid rgba(148,163,184,0.3); transition-delay: 0.2s;">
+        <p class="text-accent leading-none mb-8 font-heading font-black" style="font-size: 52px; opacity: 0.9;" aria-hidden="true">03</p>
+        <i data-lucide="building-2" class="service-icon w-[22px] h-[22px] text-gray-400 transition-colors duration-300 mb-5" style="stroke-width:1.5;"></i>
+        <h3 class="service-title text-ink mb-1 transition-colors duration-300 font-heading font-bold" style="font-size: 22px; line-height: 1.15;">Diseño Arquitectónico Integral</h3>
+        <p class="text-accent mb-5 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Del concepto a la obra</p>
+        <hr class="border-0 h-px mb-5" style="background: rgba(148,163,184,0.25);" />
+        <p class="service-desc text-gray-500 mb-6 transition-colors duration-300 font-body" style="font-size: 14px; line-height: 1.7;">
+          Desarrollo completo del proyecto arquitectónico: anteproyecto, proyecto definitivo, detalles constructivos y especificaciones técnicas. Coordinación multidisciplinar integrada.
+        </p>
+        <ul class="flex flex-wrap gap-2 mt-auto list-none m-0 p-0">
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Anteproyecto</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Proyecto Definitivo</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Detalle Técnico</li>
+        </ul>
+        <span class="service-corner absolute top-0 right-0 w-6 h-6 transition-opacity duration-300 border-t border-r border-accent" style="opacity:0;" aria-hidden="true"></span>
+      </article>
+
+      <article class="reveal service-card group relative bg-white" style="padding: 40px 32px; transition-delay: 0.3s;">
+        <p class="text-accent leading-none mb-8 font-heading font-black" style="font-size: 52px; opacity: 0.9;" aria-hidden="true">04</p>
+        <i data-lucide="clipboard-check" class="service-icon w-[22px] h-[22px] text-gray-400 transition-colors duration-300 mb-5" style="stroke-width:1.5;"></i>
+        <h3 class="service-title text-ink mb-1 transition-colors duration-300 font-heading font-bold" style="font-size: 22px; line-height: 1.15;">Consultoría e Inspección de Obra</h3>
+        <p class="text-accent mb-5 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Control técnico en campo</p>
+        <hr class="border-0 h-px mb-5" style="background: rgba(148,163,184,0.25);" />
+        <p class="service-desc text-gray-500 mb-6 transition-colors duration-300 font-body" style="font-size: 14px; line-height: 1.7;">
+          Acompañamiento técnico durante la ejecución de obra: interventoría, control de calidad, verificación de especificaciones y reportes técnicos periódicos.
+        </p>
+        <ul class="flex flex-wrap gap-2 mt-auto list-none m-0 p-0">
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Interventoría</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Control de Calidad</li>
+          <li class="service-tag border text-gray-500 transition-colors duration-300 font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border-color: rgba(148,163,184,0.4);">Informes Técnicos</li>
+        </ul>
+        <span class="service-corner absolute top-0 right-0 w-6 h-6 transition-opacity duration-300 border-t border-r border-accent" style="opacity:0;" aria-hidden="true"></span>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PORTAFOLIO
+     ============================================================ -->
+<section id="portafolio" class="relative" style="background:#0A0A0A; padding: 120px 0;" aria-labelledby="portafolio-title">
+  <div class="absolute inset-0 pointer-events-none blueprint-grid-dark-soft" aria-hidden="true"></div>
+
+  <div class="relative mx-auto px-6 md:px-10" style="max-width: 1400px;">
+
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-8">
+      <div>
+        <p class="flex items-center gap-3 mb-4">
+          <span class="h-px w-8 bg-accent" aria-hidden="true"></span>
+          <span class="text-accent uppercase font-mono" style="font-size: 10px; letter-spacing: 0.28em;">Portafolio 3D</span>
+        </p>
+        <h2 id="portafolio-title" class="text-white font-heading font-extrabold text-clamp-h2" style="line-height: 0.95;">
+          Sala de exposición<br /><span class="font-light text-gray-600">digital.</span>
+        </h2>
+      </div>
+      <p class="text-gray-500 max-w-xs font-body" style="font-size: 14px; line-height: 1.7;">
+        Proyectos residenciales, comerciales y planos técnicos desarrollados
+        por el estudio FACAO desde 2018.
+      </p>
+    </div>
+
+    <nav id="portfolio-filters" class="flex flex-wrap gap-0 mb-10" style="border-bottom: 1px solid rgba(148,163,184,0.12);" aria-label="Filtrar portafolio por categoría">
+      <button data-category="todos" class="filter-tab is-active relative pb-4 pr-8 transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Todos<span class="filter-tab-underline"></span>
+      </button>
+      <button data-category="residencial" class="filter-tab relative pb-4 pr-8 transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Residencial<span class="filter-tab-underline"></span>
+      </button>
+      <button data-category="comercial" class="filter-tab relative pb-4 pr-8 transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Comercial<span class="filter-tab-underline"></span>
+      </button>
+      <button data-category="planos" class="filter-tab relative pb-4 pr-8 transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Planos Técnicos<span class="filter-tab-underline"></span>
+      </button>
+      <button data-category="renders" class="filter-tab relative pb-4 pr-8 transition-colors duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em;">
+        Animación 3D<span class="filter-tab-underline"></span>
+      </button>
+    </nav>
+
+    <ul id="portfolio-grid-desktop" class="hidden md:grid gap-0.5 list-none m-0 p-0" style="grid-template-columns: repeat(3, 1fr); grid-auto-rows: 280px;">
+      <!-- Tarjetas generadas dinámicamente desde el <script> al final del documento -->
+    </ul>
+
+    <ul id="portfolio-grid-mobile" class="md:hidden flex gap-3 overflow-x-auto pb-4 no-scrollbar list-none m-0 p-0">
+      <!-- Tarjetas generadas dinámicamente desde el <script> al final del documento -->
+    </ul>
+
+    <p class="flex justify-center mt-14">
+      <button class="border border-gray-700 text-gray-400 hover:border-accent hover:text-accent flex items-center gap-3 transition-all duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.2em; padding: 14px 36px;">
+        Ver Portafolio Completo
+        <i data-lucide="arrow-right" class="w-3 h-3"></i>
+      </button>
+    </p>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     PROCESO
+     ============================================================ -->
+<section id="proceso" style="background:#ffffff; padding: 120px 0;" aria-labelledby="proceso-title">
+  <div class="mx-auto px-6 md:px-10" style="max-width: 1400px;">
+
+    <div class="mb-16">
+      <p class="flex items-center gap-3 mb-4">
+        <span class="h-px w-8 bg-accent" aria-hidden="true"></span>
+        <span class="text-accent uppercase font-mono" style="font-size: 10px; letter-spacing: 0.28em;">El Proceso FACAO</span>
+      </p>
+      <h2 id="proceso-title" class="text-ink mb-4 font-heading font-extrabold text-clamp-h2" style="line-height: 0.95;">
+        Del plano al modelo<br /><span class="font-light text-gray-400">en tres fases.</span>
+      </h2>
+    </div>
+
+    <div class="relative mb-20">
+      <div class="absolute top-7 left-0 right-0 h-px hidden md:block" style="background: rgba(148,163,184,0.25);" aria-hidden="true"></div>
+      <div id="timeline-progress" class="timeline-progress absolute top-7 left-0 h-px hidden md:block" style="background:#DC2626;" aria-hidden="true"></div>
+
+      <ol class="grid grid-cols-1 md:grid-cols-3 gap-10 list-none m-0 p-0">
+
+        <li class="reveal relative">
+          <p class="flex items-center gap-4 mb-6">
+            <span class="w-14 h-14 flex items-center justify-center border flex-shrink-0" style="border-color:#DC2626; background:#fff;">
+              <span class="text-accent font-heading font-extrabold" style="font-size: 22px;">01</span>
+            </span>
+            <span class="text-ink uppercase font-heading font-bold" style="font-size: 22px; letter-spacing: 0.02em;">Concepto</span>
+          </p>
+          <hr class="border-0 h-px mb-5" style="background: rgba(148,163,184,0.2);" />
+          <p class="text-gray-500 mb-5 font-body" style="font-size: 14px; line-height: 1.75;">
+            Levantamiento de necesidades, croquis iniciales y definición programática del proyecto. Estudio de factibilidad y normativa urbana.
+          </p>
+          <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">Sketching</li>
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">AutoCAD</li>
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">SketchUp</li>
+          </ul>
+        </li>
+
+        <li class="reveal relative" style="transition-delay: 0.18s;">
+          <p class="flex items-center gap-4 mb-6">
+            <span class="w-14 h-14 flex items-center justify-center border flex-shrink-0" style="border-color:#DC2626; background:#DC2626;">
+              <span class="text-white font-heading font-extrabold" style="font-size: 22px;">02</span>
+            </span>
+            <span class="text-ink uppercase font-heading font-bold" style="font-size: 22px; letter-spacing: 0.02em;">Planos Constructivos</span>
+          </p>
+          <hr class="border-0 h-px mb-5" style="background: rgba(148,163,184,0.2);" />
+          <p class="text-gray-500 mb-5 font-body" style="font-size: 14px; line-height: 1.75;">
+            Desarrollo de juegos completos: arquitectura, estructura, instalaciones. Memorias de cálculo y especificaciones técnicas para licenciamiento.
+          </p>
+          <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">Revit BIM</li>
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">AutoCAD</li>
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">ETABS</li>
+          </ul>
+        </li>
+
+        <li class="reveal relative" style="transition-delay: 0.36s;">
+          <p class="flex items-center gap-4 mb-6">
+            <span class="w-14 h-14 flex items-center justify-center border flex-shrink-0" style="border-color:#DC2626; background:#fff;">
+              <span class="text-accent font-heading font-extrabold" style="font-size: 22px;">03</span>
+            </span>
+            <span class="text-ink uppercase font-heading font-bold" style="font-size: 22px; letter-spacing: 0.02em;">Modelo 3D &amp; Entrega</span>
+          </p>
+          <hr class="border-0 h-px mb-5" style="background: rgba(148,163,184,0.2);" />
+          <p class="text-gray-500 mb-5 font-body" style="font-size: 14px; line-height: 1.75;">
+            Modelado tridimensional, renders fotorrealistas y animación walkthrough. Entrega digital del proyecto listo para ejecución de obra.
+          </p>
+          <ul class="flex flex-wrap gap-2 list-none m-0 p-0">
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">3ds Max</li>
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">V-Ray</li>
+            <li class="font-mono uppercase" style="font-size: 8px; letter-spacing: 0.15em; padding: 4px 8px; border: 1px solid rgba(148,163,184,0.3); color: #94A3B8;">Lumion</li>
+          </ul>
+        </li>
+
+      </ol>
+    </div>
+
+    <figure class="m-0">
+      <figcaption class="flex items-center gap-3 mb-6">
+        <span class="text-gray-400 uppercase font-mono" style="font-size: 10px; letter-spacing: 0.25em;">
+          Arrastra para comparar — Plano 2D vs Render 3D
+        </span>
+      </figcaption>
+
+      <div id="compare-slider" class="compare-slider">
+        <div class="compare-after absolute inset-0">
+          <img src="https://images.unsplash.com/photo-1678388583153-f0e667c97288?w=1400&h=700&fit=crop&auto=format"
+               alt="Render 3D hiperrealista — proyecto FACAO" class="absolute inset-0 w-full h-full object-cover"
+               draggable="false" loading="lazy" />
+        </div>
+
+        <div id="compare-before" class="compare-before">
+          <img src="https://images.unsplash.com/photo-1721244654394-36a7bc2da288?w=1400&h=700&fit=crop&auto=format"
+               alt="Plano técnico constructivo — FACAO Ingeniería" draggable="false" style="width: 238%;" loading="lazy" />
+        </div>
+
+        <p id="label-before" class="absolute top-5 left-5 pointer-events-none" style="background: rgba(10,10,10,0.75); padding: 5px 10px;">
+          <span class="text-white uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Plano 2D</span>
+        </p>
+        <p id="label-after" class="absolute top-5 right-5 pointer-events-none" style="background: rgba(220,38,38,0.85); padding: 5px 10px;">
+          <span class="text-white uppercase font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Render 3D</span>
+        </p>
+
+        <div id="compare-handle" class="compare-handle" role="slider" aria-label="Comparar plano 2D y render 3D" aria-valuemin="4" aria-valuemax="96" aria-valuenow="42" tabindex="0">
+          <span class="absolute inset-y-0 w-px bg-white" style="opacity: 0.8;" aria-hidden="true"></span>
+          <span class="relative z-10 flex items-center justify-center bg-white" style="width: 40px; height: 40px; border: 2px solid #DC2626; box-shadow: 0 0 0 4px rgba(220,38,38,0.2);">
+            <i data-lucide="grip-vertical" class="w-[14px] h-[14px] text-gray-600"></i>
+          </span>
+        </div>
+      </div>
+    </figure>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     ESTADÍSTICAS / SOBRE NOSOTROS
+     ============================================================ -->
+<section id="nosotros" class="blueprint-grid-light-soft" style="background:#F4F4F6; padding: 120px 0;" aria-labelledby="nosotros-title">
+  <div class="mx-auto px-6 md:px-10" style="max-width: 1400px;">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+
+      <div class="reveal-x-left flex flex-col justify-center">
+        <p class="flex items-center gap-3 mb-6">
+          <span class="h-px w-8 bg-accent" aria-hidden="true"></span>
+          <span class="text-accent uppercase font-mono" style="font-size: 10px; letter-spacing: 0.28em;">Sobre Nosotros</span>
+        </p>
+
+        <h2 id="nosotros-title" class="text-ink mb-8 font-heading font-extrabold text-clamp-h2" style="line-height: 0.95;">
+          Rigor técnico<br /><span class="font-light text-gray-500">sin concesiones.</span>
+        </h2>
+
+        <div class="space-y-5">
+          <p class="text-gray-600 font-body" style="font-size: 16px; line-height: 1.8;">
+            En FACAO combinamos el rigor de la ingeniería estructural con la
+            visión de la arquitectura contemporánea. Cada proyecto es tratado
+            como un sistema técnico preciso, donde ningún detalle constructivo
+            es menor.
+          </p>
+          <p class="text-gray-500 font-body" style="font-size: 15px; line-height: 1.8;">
+            Nuestro compromiso con las normativas constructivas vigentes,
+            la excelencia espacial y la representación digital hiperrealista
+            nos posiciona como aliados técnicos de confianza para clientes
+            residenciales y promotores comerciales en Costa Rica.
+          </p>
+        </div>
+
+        <ul class="mt-10 flex flex-wrap gap-4 pt-8 list-none m-0" style="border-top: 1px solid rgba(148,163,184,0.3);">
+          <li class="text-gray-400 border font-mono uppercase" style="font-size: 8px; letter-spacing: 0.12em; padding: 5px 10px; border-color: rgba(148,163,184,0.3);">Colegio de Ingenieros y Arquitectos de Costa Rica</li>
+          <li class="text-gray-400 border font-mono uppercase" style="font-size: 8px; letter-spacing: 0.12em; padding: 5px 10px; border-color: rgba(148,163,184,0.3);">COPNIA — Consejo Prof. Nal. de Ing.</li>
+          <li class="text-gray-400 border font-mono uppercase" style="font-size: 8px; letter-spacing: 0.12em; padding: 5px 10px; border-color: rgba(148,163,184,0.3);">ISO 9001:2015 en Gestión de Calidad</li>
+        </ul>
+      </div>
+
+      <dl class="grid grid-cols-2 gap-px kv-grid m-0" style="border: 1px solid rgba(148,163,184,0.3);">
+
+        <div class="reveal bg-white flex flex-col justify-between" style="padding: 36px 32px; border-right: 1px solid rgba(148,163,184,0.3); border-bottom: 1px solid rgba(148,163,184,0.3);">
+          <dd class="text-ink leading-none mb-2 font-heading font-black text-clamp-stat">
+            <span class="stat-counter" data-target="200" data-duration="1800">0</span><span class="text-accent stat-suffix">+</span>
+          </dd>
+          <dt class="text-ink uppercase mb-2 font-heading font-bold" style="font-size: 16px; letter-spacing: 0.02em;">Proyectos Diseñados</dt>
+          <p class="text-gray-400 font-body" style="font-size: 12px; line-height: 1.6;">Residenciales, comerciales e institucionales desde 2018</p>
+        </div>
+
+        <div class="reveal bg-white flex flex-col justify-between" style="padding: 36px 32px; border-bottom: 1px solid rgba(148,163,184,0.3); transition-delay: 0.1s;">
+          <dd class="text-ink leading-none mb-2 font-heading font-black text-clamp-stat">
+            <span class="stat-counter" data-target="15000" data-format="k" data-duration="2200">0</span><span class="text-accent stat-suffix">+</span>
+          </dd>
+          <dt class="text-ink uppercase mb-2 font-heading font-bold" style="font-size: 16px; letter-spacing: 0.02em;">M² Modelados en 3D</dt>
+          <p class="text-gray-400 font-body" style="font-size: 12px; line-height: 1.6;">Superficie total representada en modelos BIM de alta fidelidad</p>
+        </div>
+
+        <div class="reveal bg-white flex flex-col justify-between" style="padding: 36px 32px; border-right: 1px solid rgba(148,163,184,0.3); transition-delay: 0.2s;">
+          <dd class="text-ink leading-none mb-2 font-heading font-black text-clamp-stat">
+            <span class="stat-counter" data-target="100" data-duration="1600">0</span><span class="text-accent stat-suffix">%</span>
+          </dd>
+          <dt class="text-ink uppercase mb-2 font-heading font-bold" style="font-size: 16px; letter-spacing: 0.02em;">Precisión Estructural</dt>
+          <p class="text-gray-400 font-body" style="font-size: 12px; line-height: 1.6;">Cumplimiento de normativas NSR-10, RETIE y codes locales</p>
+        </div>
+
+        <div class="reveal bg-white flex flex-col justify-between" style="padding: 36px 32px; transition-delay: 0.3s;">
+          <dd class="text-ink leading-none mb-2 font-heading font-black text-clamp-stat">
+            <span class="stat-counter" data-target="6" data-duration="1200">0</span><span class="text-accent stat-suffix"></span>
+          </dd>
+          <dt class="text-ink uppercase mb-2 font-heading font-bold" style="font-size: 16px; letter-spacing: 0.02em;">Años de Trayectoria</dt>
+          <p class="text-gray-400 font-body" style="font-size: 12px; line-height: 1.6;">Consolidados como referente técnico en el mercado costarricense</p>
+        </div>
+
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTACTO
+     ============================================================ -->
+<section id="contacto" style="background:#ffffff; padding: 120px 0;" aria-labelledby="contacto-title">
+  <div class="mx-auto px-6 md:px-10" style="max-width: 1400px;">
+
+    <div class="mb-16">
+      <p class="flex items-center gap-3 mb-4">
+        <span class="h-px w-8 bg-accent" aria-hidden="true"></span>
+        <span class="text-accent uppercase font-mono" style="font-size: 10px; letter-spacing: 0.28em;">Iniciar Proyecto</span>
+      </p>
+      <h2 id="contacto-title" class="text-ink font-heading font-extrabold text-clamp-h2" style="line-height: 0.95;">
+        Cuéntenos sobre<br /><span class="font-light text-gray-400">su proyecto.</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-16 lg:gap-24">
+
+      <div>
+        <form id="contact-form" class="space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <p>
+              <label for="field-name" class="block mb-1.5 text-gray-400 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.22em;">Nombre / Empresa *</label>
+              <input id="field-name" type="text" required name="name" placeholder="Ej. María García / Constructora Norte" class="form-input" />
+            </p>
+            <p>
+              <label for="field-email" class="block mb-1.5 text-gray-400 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.22em;">Correo Electrónico *</label>
+              <input id="field-email" type="email" required name="email" placeholder="correo@empresa.com" class="form-input" />
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <p>
+              <label for="field-type" class="block mb-1.5 text-gray-400 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.22em;">Tipo de Proyecto</label>
+              <select id="field-type" name="projectType" class="form-input" style="cursor:pointer;">
+                <option value="">Seleccionar tipo…</option>
+                <option>Residencial Unifamiliar</option>
+                <option>Residencial Multifamiliar</option>
+                <option>Comercial / Oficinas</option>
+                <option>Industrial</option>
+                <option>Solo Planos Constructivos</option>
+                <option>Modelado 3D / Renders</option>
+                <option>Consultoría Técnica</option>
+              </select>
+            </p>
+            <p>
+              <label for="field-budget" class="block mb-1.5 text-gray-400 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.22em;">Presupuesto Estimado</label>
+              <select id="field-budget" name="budget" class="form-input" style="cursor:pointer;">
+                <option value="">Seleccionar rango…</option>
+                <option>Menos de $50 000 </option>
+                <option>$50M – $150 000</option>
+                <option>$150M – $500 000</option>
+                <option>$500M – $2.000 000 </option>
+                <option>Más de $5.000 000</option>
+                <option>Por definir</option>
+              </select>
+            </p>
+          </div>
+
+          <p>
+            <label for="field-area" class="block mb-1.5 text-gray-400 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.22em;">Área del Proyecto / Lote (m²)</label>
+            <input id="field-area" type="text" name="area" placeholder="Ej. 450 m² lote — 280 m² construibles" class="form-input" />
+          </p>
+
+          <p>
+            <label for="field-message" class="block mb-1.5 text-gray-400 uppercase font-mono" style="font-size: 9px; letter-spacing: 0.22em;">Detalles del Proyecto / Ubicación del Lote</label>
+            <textarea id="field-message" rows="4" name="message" placeholder="Describa brevemente su proyecto: tipo de construcción, número de pisos, usos requeridos, cronograma estimado o cualquier condición relevante del predio…" class="form-input" style="resize: vertical;"></textarea>
+          </p>
+
+          <p class="pt-2">
+            <button type="submit" class="bg-accent text-white hover:bg-accent-dark transition-colors duration-200 flex items-center gap-3 group font-mono uppercase" style="font-size: 11px; letter-spacing: 0.22em; padding: 16px 36px;">
+              Enviar Solicitud de Diseño
+              <i data-lucide="arrow-right" class="w-[13px] h-[13px] group-hover:translate-x-1 transition-transform duration-200"></i>
+            </button>
+            <span class="block text-gray-400 mt-4 font-mono" style="font-size: 9px; letter-spacing: 0.12em;">
+              * Respuesta garantizada en &lt; 24 h hábiles. Sus datos son tratados bajo la Ley 1581 de 2012.
+            </span>
+          </p>
+        </form>
+
+        <div id="contact-success" class="hidden flex-col items-start gap-4 py-16" style="display:none;">
+          <span class="w-12 h-12 bg-accent flex items-center justify-center">
+            <i data-lucide="arrow-right" class="w-5 h-5 text-white"></i>
+          </span>
+          <p class="text-ink font-heading font-bold" style="font-size: 32px;">Solicitud enviada correctamente.</p>
+          <p class="text-gray-500 max-w-md font-body" style="font-size: 15px; line-height: 1.7;">
+            Nuestro equipo técnico revisará su requerimiento y se comunicará
+            con usted en un plazo no mayor a 24 horas hábiles.
+          </p>
+          <p id="contact-ref" class="text-accent uppercase mt-2 font-mono" style="font-size: 10px; letter-spacing: 0.2em;"></p>
+        </div>
+      </div>
+
+      <address class="flex flex-col gap-0" style="border-left: 1px solid rgba(148,163,184,0.2); padding-left: 40px; font-style: normal;">
+        <div class="mb-8">
+          <p class="text-gray-400 uppercase block mb-5 font-mono" style="font-size: 9px; letter-spacing: 0.25em;">Oficinas FACAO</p>
+          <dl class="space-y-5 m-0">
+            <div class="flex gap-4">
+              <i data-lucide="map-pin" class="w-[14px] h-[14px] text-accent mt-1 flex-shrink-0"></i>
+              <div>
+                <dt class="text-gray-400 uppercase mb-1 font-mono" style="font-size: 8px; letter-spacing: 0.2em;">Dirección</dt>
+                <dd class="text-[#1F2937] whitespace-pre-line font-body m-0" style="font-size: 14px; line-height: 1.6;">San Carlos, Alajuela, Costa Rica</dd>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <i data-lucide="phone" class="w-[14px] h-[14px] text-accent mt-1 flex-shrink-0"></i>
+              <div>
+                <dt class="text-gray-400 uppercase mb-1 font-mono" style="font-size: 8px; letter-spacing: 0.2em;">Teléfono</dt>
+                <dd class="text-[#1F2937] whitespace-pre-line font-body m-0" style="font-size: 14px; line-height: 1.6;">+506 86431017</dd>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <i data-lucide="mail" class="w-[14px] h-[14px] text-accent mt-1 flex-shrink-0"></i>
+              <div>
+                <dt class="text-gray-400 uppercase mb-1 font-mono" style="font-size: 8px; letter-spacing: 0.2em;">Email</dt>
+                <dd class="text-[#1F2937] whitespace-pre-line font-body m-0" style="font-size: 14px; line-height: 1.6;">proyectos@facao.com
+contacto@facao.com</dd>
+              </div>
+            </div>
+            <div class="flex gap-4">
+              <i data-lucide="clock" class="w-[14px] h-[14px] text-accent mt-1 flex-shrink-0"></i>
+              <div>
+                <dt class="text-gray-400 uppercase mb-1 font-mono" style="font-size: 8px; letter-spacing: 0.2em;">Horario</dt>
+                <dd class="text-[#1F2937] whitespace-pre-line font-body m-0" style="font-size: 14px; line-height: 1.6;">Lun – Vie: 8:00 – 18:00
+Sáb: 9:00 – 13:00</dd>
+              </div>
+            </div>
+          </dl>
+        </div>
+
+        <div class="mt-auto overflow-hidden relative" style="height: 200px; background: #F4F4F6; border: 1px solid rgba(148,163,184,0.25);">
+          <div class="absolute inset-0 blueprint-grid-map" aria-hidden="true"></div>
+          <div class="absolute inset-0 flex items-center justify-center" aria-hidden="true">
+            <span class="absolute" style="width: 100%; height: 1px; background: rgba(148,163,184,0.5); top: 45%;"></span>
+            <span class="absolute" style="width: 100%; height: 1px; background: rgba(148,163,184,0.5); top: 70%;"></span>
+            <span class="absolute" style="height: 100%; width: 1px; background: rgba(148,163,184,0.5); left: 35%;"></span>
+            <span class="absolute" style="height: 100%; width: 1px; background: rgba(148,163,184,0.5); left: 65%;"></span>
+            <span class="relative z-10 flex flex-col items-center">
+              <span class="w-5 h-5 bg-accent flex items-center justify-center map-pin-flag"></span>
+              <span class="w-3 h-3 bg-accent rounded-full -mt-3"></span>
+              <span class="mt-2 bg-ink text-white font-mono" style="font-size: 8px; padding: 3px 8px; letter-spacing: 0.12em;">FACAO · Costa Rica</span>
+            </span>
+          </div>
+        </div>
+
+        <a href="https://wa.me/50686431017" target="_blank" rel="noopener noreferrer" class="mt-5 flex items-center justify-center gap-3 border border-gray-300 hover:border-accent hover:text-accent text-gray-600 transition-all duration-200 font-mono uppercase" style="font-size: 10px; letter-spacing: 0.18em; padding: 12px 20px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" /></svg>
+          Consultar por WhatsApp
+        </a>
+      </address>
+
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer style="background:#0A0A0A; border-top: 1px solid rgba(148,163,184,0.08);">
+
+  <div class="mx-auto px-6 md:px-10" style="max-width: 1400px; padding-top: 80px; padding-bottom: 60px;">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16">
+
+      <div>
+        <p class="mb-6">
+          <span class="text-white tracking-[0.12em] font-heading font-black" style="font-size: 28px;">FACAO</span>
+          <span class="block text-gray-600 mt-0.5 uppercase font-mono" style="font-size: 8px; letter-spacing: 0.22em;">ingeniería &amp; arquitectura</span>
+        </p>
+
+        <p class="text-gray-500 mb-8 max-w-xs font-body" style="font-size: 14px; line-height: 1.75;">
+          Diseño arquitectónico, planos constructivos y modelado 3D de
+          precisión para proyectos residenciales y comerciales en Costa Rica.
+        </p>
+
+        <ul class="flex gap-3 mb-10 list-none m-0 p-0">
+        
+          <li>
+            <a href="https://www.instagram.com/facaoing?igsh=MWlqbWRtNW9jN2tmYQ==" aria-label="Instagram" target="_blank" rel="noopener noreferrer" class="text-gray-600 hover:text-white border border-gray-800 hover:border-gray-600 flex items-center justify-center transition-all duration-200" style="width: 36px; height: 36px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" /></svg>
+            </a>
+          </li>
+        </ul>
+
+        <div>
+          <p class="text-gray-500 uppercase mb-3 font-mono" style="font-size: 9px; letter-spacing: 0.2em;">Boletín Técnico</p>
+          <form id="newsletter-form" class="flex">
+            <label for="newsletter-email" class="sr-only">Correo electrónico para el boletín</label>
+            <input id="newsletter-email" type="email" required placeholder="correo@empresa.com" class="flex-1 bg-transparent border border-gray-800 border-r-0 text-gray-400 placeholder-gray-700 focus:outline-none focus:border-gray-600 transition-colors font-mono" style="font-size: 11px; padding: 10px 14px;" />
+            <button type="submit" class="bg-accent hover:bg-accent-dark text-white flex items-center justify-center transition-colors duration-200" style="width: 42px; border: 1px solid #DC2626; flex-shrink: 0;" aria-label="Suscribirse">
+              <i data-lucide="arrow-right" class="w-[13px] h-[13px]"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <nav class="grid grid-cols-1 sm:grid-cols-3 gap-10" aria-label="Enlaces del pie de página">
+        <div>
+          <p class="text-gray-400 uppercase mb-5 font-mono" style="font-size: 9px; letter-spacing: 0.25em;">Servicios</p>
+          <ul class="space-y-3 list-none m-0 p-0">
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Modelado 3D &amp; Renders</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Planos Constructivos</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Diseño Arquitectónico</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Consultoría de Obra</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Visados &amp; Licencias</button></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-gray-400 uppercase mb-5 font-mono" style="font-size: 9px; letter-spacing: 0.25em;">Portafolio</p>
+          <ul class="space-y-3 list-none m-0 p-0">
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Proyectos Residenciales</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Proyectos Comerciales</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Planos Técnicos</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Animaciones 3D</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Todos los Proyectos</button></li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-gray-400 uppercase mb-5 font-mono" style="font-size: 9px; letter-spacing: 0.25em;">Empresa</p>
+          <ul class="space-y-3 list-none m-0 p-0">
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Sobre FACAO</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Nuestro Proceso</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Equipo Técnico</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Certificaciones</button></li>
+            <li><button class="text-gray-600 hover:text-gray-300 text-left transition-colors duration-200 font-body" style="font-size: 14px;">Contacto</button></li>
+          </ul>
+        </div>
+      </nav>
+    </div>
+
+    <ul class="mt-16 pt-8 flex flex-wrap items-center gap-6 list-none m-0" style="border-top: 1px solid rgba(148,163,184,0.08);">
+      <li class="text-gray-700 border uppercase font-mono" style="font-size: 7px; letter-spacing: 0.15em; padding: 5px 10px; border-color: rgba(148,163,184,0.12);">Colegio de Ingenieros y Arquitectos de Costa Rica</li>
+      <li class="text-gray-700 border uppercase font-mono" style="font-size: 7px; letter-spacing: 0.15em; padding: 5px 10px; border-color: rgba(148,163,184,0.12);">COPNIA</li>
+      <li class="text-gray-700 border uppercase font-mono" style="font-size: 7px; letter-spacing: 0.15em; padding: 5px 10px; border-color: rgba(148,163,184,0.12);">ISO 9001:2015</li>
+      <li class="text-gray-700 border uppercase font-mono" style="font-size: 7px; letter-spacing: 0.15em; padding: 5px 10px; border-color: rgba(148,163,184,0.12);">ISO 14001:2015</li>
+    </ul>
+  </div>
+
+  <div style="border-top: 1px solid rgba(148,163,184,0.07);">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4 mx-auto px-6 md:px-10" style="max-width: 1400px; padding-top: 20px; padding-bottom: 20px;">
+      <p class="text-gray-700 font-mono m-0" style="font-size: 9px; letter-spacing: 0.15em;">
+        © 2024 FACAO Ingeniería &amp; Arquitectura SAS · NIT 900.123.456-7 · Todos los derechos reservados
+      </p>
+      <nav class="flex gap-6" aria-label="Enlaces legales">
+        <button class="text-gray-700 hover:text-gray-400 transition-colors duration-200 font-mono" style="font-size: 9px; letter-spacing: 0.12em;">Política de Privacidad</button>
+        <button class="text-gray-700 hover:text-gray-400 transition-colors duration-200 font-mono" style="font-size: 9px; letter-spacing: 0.12em;">Tratamiento de Datos</button>
+        <button class="text-gray-700 hover:text-gray-400 transition-colors duration-200 font-mono" style="font-size: 9px; letter-spacing: 0.12em;">Términos de Servicio</button>
+      </nav>
+    </div>
+  </div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
