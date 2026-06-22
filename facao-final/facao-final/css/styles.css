@@ -1,0 +1,297 @@
+/* ============================================================
+   FACAO — Hoja de estilos
+   Complementa a Tailwind (CDN): grids tipo plano técnico,
+   animaciones, slider, formularios, etc.
+   ============================================================ */
+
+
+html { scroll-behavior: smooth; }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) transparent;
+}
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background-color: rgba(148, 163, 184, 0.3); border-radius: 0; }
+
+.text-clamp-h1 { font-size: clamp(54px, 7.5vw, 96px); }
+.text-clamp-h2 { font-size: clamp(36px, 5vw, 64px); }
+.text-clamp-stat { font-size: clamp(52px, 5vw, 72px); }
+.text-clamp-mobile-nav { font-size: clamp(30px, 8vw, 52px); }
+
+.blueprint-grid-dark {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.blueprint-grid-dark-soft {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 70px 70px;
+}
+.blueprint-grid-dark-menu {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 1) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.blueprint-grid-light {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.blueprint-grid-light-soft {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.065) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.065) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.blueprint-grid-map {
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.2) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.vertical-text { writing-mode: vertical-rl; }
+
+.navbar-transparent {
+  background: rgba(10, 10, 10, 0.15);
+  backdrop-filter: blur(12px);
+  border-bottom: none;
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+.navbar-solid {
+  background: rgba(10, 10, 10, 0.97);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.nav-link-underline {
+  position: absolute; bottom: -2px; left: 0; height: 1px; width: 0;
+  background-color: #DC2626; transition: width 0.3s ease;
+}
+.nav-link:hover .nav-link-underline { width: 100%; }
+
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 40; background: #0A0A0A;
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity 0.25s ease;
+}
+.mobile-menu.is-open { display: flex; opacity: 1; }
+.mobile-menu-link {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.3s ease, transform 0.3s ease, color 0.2s ease;
+}
+.mobile-menu.is-open .mobile-menu-link { opacity: 1; transform: translateY(0); }
+
+@keyframes hero-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+.hero-scroll-indicator { animation: hero-bounce 1.8s ease-in-out infinite; }
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.pulse-dot { animation: pulse-dot 1.6s ease-in-out infinite; }
+
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+.reveal.is-visible { opacity: 1; transform: translateY(0); }
+.reveal-scale {
+  opacity: 0; transform: scale(0.97);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.reveal-scale.is-visible { opacity: 1; transform: scale(1); }
+.reveal-x-left {
+  opacity: 0; transform: translateX(-24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal-x-left.is-visible { opacity: 1; transform: translateX(0); }
+
+.timeline-progress { width: 0; transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1); }
+.timeline-progress.is-visible { width: 100%; }
+
+.compare-slider {
+  position: relative; overflow: hidden; user-select: none; cursor: ew-resize;
+  height: 480px; border: 1px solid rgba(148, 163, 184, 0.2);
+}
+.compare-before { position: absolute; inset: 0; overflow: hidden; width: 42%; }
+.compare-before img {
+  position: absolute; inset: 0; height: 100%; max-width: none;
+  filter: grayscale(0.2) contrast(1.05);
+}
+.compare-after img { filter: saturate(0.85); }
+.compare-handle {
+  position: absolute; top: 0; bottom: 0; left: 42%; transform: translateX(-50%);
+  display: flex; align-items: center; justify-content: center; pointer-events: none;
+}
+
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+.map-pin-flag { clip-path: polygon(50% 100%, 0 35%, 100% 35%); }
+
+.service-card { transition: background-color 0.3s ease; }
+.service-card:hover { background-color: #0A0A0A; }
+.service-card:hover .service-title { color: #fff; }
+.service-card:hover .service-desc { color: #9CA3AF; }
+.service-card:hover .service-icon { color: #DC2626; }
+.service-card:hover .service-tag { border-color: #374151; color: #6B7280; }
+.service-card:hover .service-corner { opacity: 1; }
+
+.portfolio-card img { transition: transform 0.7s ease, filter 0.3s ease; }
+.portfolio-card:hover img { transform: scale(1.05); }
+.portfolio-overlay {
+  background: linear-gradient(180deg, transparent 30%, rgba(10, 10, 10, 0.96) 100%);
+  opacity: 0.7; transition: opacity 0.4s ease;
+}
+.portfolio-card:hover .portfolio-overlay { opacity: 1; }
+.portfolio-badge, .portfolio-cta, .portfolio-corner {
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.portfolio-card:hover .portfolio-badge,
+.portfolio-card:hover .portfolio-cta,
+.portfolio-card:hover .portfolio-corner { opacity: 1; }
+.portfolio-data {
+  opacity: 0; transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.portfolio-card:hover .portfolio-data { opacity: 1; transform: translateY(0); }
+.portfolio-cta:hover { gap: 0.75rem; }
+
+.filter-tab { position: relative; color: #6B7280; }
+.filter-tab.is-active { color: #DC2626; }
+.filter-tab-underline {
+  position: absolute; bottom: 0; left: 0; right: 2rem; height: 1px;
+  background: #DC2626; transform: scaleX(0); transition: transform 0.25s ease;
+}
+.filter-tab.is-active .filter-tab-underline { transform: scaleX(1); }
+
+.form-input {
+  width: 100%; background: transparent; border: none;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+  padding: 10px 0; font-size: 15px; color: #1F2937;
+  font-family: "Barlow", sans-serif; outline: none;
+  transition: border-color 0.2s ease;
+}
+.form-input:focus { border-bottom-color: #DC2626; }
+
+/* dl/dt/dd usados como pares clave-valor técnicos (sin estilos de lista por defecto) */
+.kv-list { margin: 0; }
+.kv-row { display: flex; justify-content: space-between; align-items: center; }
+.kv-grid { display: grid; margin: 0; }
+
+@media (max-width: 1023px) {
+  .desktop-only { display: none !important; }
+}
+@media (min-width: 1024px) {
+  .mobile-only { display: none !important; }
+}
+/* ============================================================
+   Botón flotante de WhatsApp (FAB)
+   ============================================================ */
+.whatsapp-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 30; /* debajo del menú móvil (z-40) para que el menú lo tape al abrirse */
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #25D366; /* verde oficial de WhatsApp */
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.whatsapp-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 8px 26px rgba(37, 211, 102, 0.5);
+}
+.whatsapp-fab:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+/* Anillo pulsante sutil para llamar la atención */
+.whatsapp-fab::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: #25D366;
+  z-index: -1;
+  animation: whatsapp-pulse 2s ease-out infinite;
+}
+@keyframes whatsapp-pulse {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.8); opacity: 0;   }
+}
+
+/* Respeta a quienes prefieren menos movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-fab,
+  .whatsapp-fab::before { animation: none; transition: none; }
+}
+
+@media (max-width: 640px) {
+  .whatsapp-fab { width: 52px; height: 52px; right: 16px; bottom: 16px; }
+}
+/* ============================================================
+   Control de zoom de página (accesibilidad)
+   ============================================================ */
+.zoom-control {
+  position: fixed;
+  left: 24px;
+  bottom: 24px;
+  z-index: 30; /* debajo del menú móvil (z-40) */
+  display: flex;
+  gap: 4px;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  padding: 6px;
+}
+.zoom-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.zoom-btn:hover { background-color: #DC2626; }
+.zoom-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.zoom-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.zoom-btn-reset { font-size: 14px; color: #94A3B8; }
+.zoom-btn span { font-size: 0.85em; margin-left: 1px; }
+
+/* Por si algún día quitás Tailwind: clase para lectores de pantalla */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+@media (max-width: 640px) {
+  .zoom-control { left: 16px; bottom: 16px; }
+  .zoom-btn { width: 36px; height: 36px; font-size: 16px; }
+}
